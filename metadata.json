@@ -1,0 +1,7 @@
+{
+  "name": "Mochi Curhat AI",
+  "description": "Mochi adalah teman curhat AI yang empatik, menyediakan ruang aman untuk berbagi perasaan dan masalah Anda tanpa dihakimi.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
