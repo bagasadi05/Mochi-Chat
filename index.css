@@ -64,6 +64,18 @@ code {
   box-sizing: border-box;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: var(--Neutral-00);
@@ -352,6 +364,29 @@ header {
   gap: 20px;
 }
 
+.status-indicators {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+}
+
+.latency-indicator {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--Neutral-60);
+  padding-left: 12px;
+  border-left: 1px solid var(--Neutral-30);
+}
+
 /* Modal */
 .modalShroud {
   position: fixed;
@@ -435,8 +470,8 @@ header {
   color: var(--Neutral-80);
   transition: all 0.3s;
   font-size: 16px;
-  padding: 8px 12px;
-  border-radius: 20px;
+  padding: 12px; /* Lebih banyak padding untuk target sentuh yang lebih baik */
+  border-radius: 50px; /* Disesuaikan agar terlihat bagus dengan padding baru */
   background-color: transparent;
   border: 1px solid transparent;
 }
@@ -490,8 +525,8 @@ form button {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 8px;
-  border-radius: 8px;
+  padding: 12px; /* Lebih banyak padding untuk target sentuh yang lebih baik */
+  border-radius: 12px; /* Disesuaikan agar terlihat bagus dengan padding baru */
   transition: background-color 0.2s ease-in-out;
 }
 .agent-edit-button:hover {
@@ -808,4 +843,69 @@ form button {
 /* Connected State */
 .ping-indicator--connected .bar {
   fill: #34a853; /* Green */
+}
+
+/* Session Type Selector */
+.session-type-selector {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.session-type-selector > p {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text) !important;
+  margin-bottom: 10px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: var(--Neutral-10);
+  border: 1px solid var(--Neutral-30);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.radio-group label:hover {
+  border-color: var(--Neutral-50);
+}
+
+.radio-group input[type='radio'] {
+  margin-right: 12px;
+  width: auto;
+  accent-color: var(--interactive-blue);
+}
+
+.radio-group input[type='radio']:focus-visible + .radio-content {
+  outline: 2px solid var(--interactive-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.radio-group .radio-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-group .radio-title {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.radio-group .radio-description {
+  font-size: 14px;
+  color: var(--Neutral-60);
+}
+
+.radio-group input[type='radio']:checked + .radio-content .radio-title {
+  color: var(--interactive-blue);
 }

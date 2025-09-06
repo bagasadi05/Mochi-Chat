@@ -25,6 +25,7 @@ import { AudioStreamer } from '../../lib/audio-streamer';
 import { audioContext } from '../../lib/utils';
 import VolMeterWorket from '../../lib/worklets/vol-meter';
 import { DEFAULT_LIVE_API_MODEL } from '../../lib/constants';
+import { useMetrics } from '@/lib/metrics';
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting';
 
@@ -49,6 +50,7 @@ export function useLiveApi({
   model?: string;
 }): UseLiveApiResults {
   const client = useMemo(() => new GenAILiveClient(apiKey, model), [apiKey]);
+  const { setTurnStartTime, recordResponseLatency } = useMetrics();
 
   const audioStreamerRef = useRef<AudioStreamer | null>(null);
 
@@ -62,6 +64,8 @@ export function useLiveApi({
     if (!audioStreamerRef.current) {
       audioContext({ id: 'audio-out' }).then((audioCtx: AudioContext) => {
         audioStreamerRef.current = new AudioStreamer(audioCtx);
+        // Atur callback onComplete untuk memulai timer giliran berikutnya
+        audioStreamerRef.current.onComplete = setTurnStartTime;
         audioStreamerRef.current
           .addWorklet<any>('vumeter-out', VolMeterWorket, (ev: any) => {
             setVolume(ev.data.volume);
@@ -74,7 +78,7 @@ export function useLiveApi({
           });
       });
     }
-  }, [audioStreamerRef]);
+  }, [audioStreamerRef, setTurnStartTime]);
 
   useEffect(() => {
     const onOpen = () => {
@@ -99,6 +103,8 @@ export function useLiveApi({
     };
 
     const onAudio = (data: ArrayBuffer) => {
+      // Catat waktu respons saat audio pertama diterima
+      recordResponseLatency();
       if (audioStreamerRef.current) {
         audioStreamerRef.current.addPCM16(new Uint8Array(data));
       }
@@ -119,7 +125,7 @@ export function useLiveApi({
       client.off('interrupted', stopAudioStreamer);
       client.off('audio', onAudio);
     };
-  }, [client]);
+  }, [client, recordResponseLatency]);
 
   const connect = useCallback(async () => {
     if (!config) {

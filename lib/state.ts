@@ -28,12 +28,28 @@ export const useUser = create<
 /**
  * Agents
  */
-// FIX: Add `update` to the agent store to allow updating the current agent's properties.
+export type AgentMode = 'curhat' | 'pacar';
+
 export const useAgent = create<{
   current: Agent;
+  mode: AgentMode;
+  setMode: (mode: AgentMode) => void;
   update: (id: string, adjustments: Partial<Agent>) => void;
 }>(set => ({
   current: Mochi,
+  mode: 'curhat',
+  setMode: mode =>
+    set(state => {
+      // Jika agen saat ini adalah Mochi, ubah warnanya berdasarkan mode
+      if (state.current.id === 'mochi-confidant') {
+        const newColor = mode === 'pacar' ? '#f538a0' : '#a142f4';
+        return {
+          mode,
+          current: { ...state.current, bodyColor: newColor },
+        };
+      }
+      return { mode };
+    }),
   update: (id, adjustments) =>
     set(state => ({
       current:

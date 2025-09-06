@@ -3,11 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import Modal from './Modal';
-import { useUI, useUser } from '@/lib/state';
+import { useUI, useUser, useAgent } from '@/lib/state';
+import { AgentMode } from '@/lib/state';
 
 export default function UserSettings() {
   const { name, info, setName, setInfo } = useUser();
   const { setShowUserConfig } = useUI();
+  const { mode, setMode } = useAgent();
 
   function updateClient() {
     setShowUserConfig(false);
@@ -29,6 +31,42 @@ export default function UserSettings() {
             updateClient();
           }}
         >
+          <div className="session-type-selector">
+            <p>Pilih Jenis Sesi</p>
+            <div className="radio-group">
+              <label>
+                <input
+                  type="radio"
+                  name="session-type"
+                  value="curhat"
+                  checked={mode === 'curhat'}
+                  onChange={() => setMode('curhat')}
+                />
+                <div className="radio-content">
+                  <span className="radio-title">Sesi Curhat</span>
+                  <span className="radio-description">
+                    Mochi akan menjadi pendengar yang empatik dan sabar.
+                  </span>
+                </div>
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="session-type"
+                  value="pacar"
+                  checked={mode === 'pacar'}
+                  onChange={() => setMode('pacar')}
+                />
+                <div className="radio-content">
+                  <span className="radio-title">Ngobrol Santai</span>
+                  <span className="radio-description">
+                    Obrolan ringan layaknya dengan pacar yang ceria.
+                  </span>
+                </div>
+              </label>
+            </div>
+          </div>
+
           <p>
             Menambahkan info ini membantu saya memahami Anda dengan lebih baik:
           </p>

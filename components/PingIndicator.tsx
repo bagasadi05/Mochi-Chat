@@ -9,9 +9,18 @@ type PingIndicatorProps = {
   status: ConnectionStatus;
 };
 
+const statusMap: Record<ConnectionStatus, string> = {
+  connecting: 'Menghubungkan...',
+  connected: 'Terhubung',
+  disconnected: 'Koneksi terputus',
+};
+
 export default function PingIndicator({ status }: PingIndicatorProps) {
   return (
-    <div className={c('ping-indicator', `ping-indicator--${status}`)}>
+    <div
+      className={c('ping-indicator', `ping-indicator--${status}`)}
+      role="status"
+    >
       <svg
         width="24"
         height="20"
@@ -53,6 +62,7 @@ export default function PingIndicator({ status }: PingIndicatorProps) {
           rx="1.5"
         />
       </svg>
+      <span className="sr-only">{statusMap[status]}</span>
     </div>
   );
 }
